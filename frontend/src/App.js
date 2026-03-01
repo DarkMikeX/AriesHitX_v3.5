@@ -11,12 +11,10 @@ import {
   Copy, 
   Trash2,
   ChevronRight,
-  ChevronDown,
   X,
   Lock,
   CreditCard,
   Globe,
-  Key,
   RefreshCw,
   Check,
   Volume2,
@@ -25,10 +23,8 @@ import {
   Bell,
   Palette,
   Crown,
-  Mail
 } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Toaster, toast } from "sonner";
 
 // Custom Toggle Component
@@ -85,7 +81,24 @@ const LogEntry = ({ type, message, timestamp, index }) => {
   );
 };
 
-// Settings Modal - Single Column with Scroller
+// Custom Toast Function
+const showToast = (message) => {
+  toast.custom((t) => (
+    <motion.div
+      initial={{ opacity: 0, y: 50, scale: 0.9 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 20, scale: 0.9 }}
+      className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-[#1a1a1a] border border-[#252525] shadow-xl"
+    >
+      <div className="w-6 h-6 rounded-full bg-[#8b5cf6] flex items-center justify-center">
+        <Check className="w-4 h-4 text-white" />
+      </div>
+      <span className="text-sm text-white">{message}</span>
+    </motion.div>
+  ), { duration: 2000 });
+};
+
+// Settings Modal - BIG with proper scroll
 const SettingsModal = ({ open, onClose }) => {
   const [settings, setSettings] = useState({
     licenseKey: "",
@@ -146,371 +159,310 @@ const SettingsModal = ({ open, onClose }) => {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent hideCloseButton={true} className="max-w-lg w-[90vw] h-[80vh] bg-[#0a0a0a] border border-[#1a1a1a] text-white p-0 overflow-hidden rounded-3xl" data-testid="settings-modal">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="h-full flex flex-col"
-        >
+      <DialogContent className="w-[50vw] h-[75vh] max-w-none bg-[#0a0a0a] border border-[#1a1a1a] text-white p-0 rounded-2xl" data-testid="settings-modal">
+        <div className="h-full flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-between p-5 border-b border-[#1a1a1a]">
+          <div className="flex items-center justify-between p-5 border-b border-[#1a1a1a] shrink-0">
             <h2 className="text-xl font-semibold">Settings</h2>
             <motion.button 
-              whileHover={{ scale: 1.1, rotate: 90 }}
+              whileHover={{ scale: 1.2, rotate: 90 }}
               whileTap={{ scale: 0.9 }}
               onClick={onClose}
-              className="p-2 rounded-full hover:bg-[#1a1a1a] transition-colors"
+              className="p-2 rounded-xl hover:bg-[#1a1a1a] transition-all duration-300"
             >
-              <X className="w-5 h-5" />
+              <X className="w-6 h-6" />
             </motion.button>
           </div>
 
-          {/* Content - Single Column with Scroll */}
-          <ScrollArea className="flex-1 h-full">
-            <div className="p-5 space-y-5">
-              
-              {/* Premium */}
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-[#8b5cf6] flex items-center gap-2">
-                  <Crown className="w-4 h-4" /> Premium
-                </h3>
-                <div className="bg-[#111] rounded-2xl p-4">
-                  <label className="text-xs text-[#555] mb-2 block">License Key:</label>
+          {/* Content - Scrollable */}
+          <div className="flex-1 overflow-y-auto p-5 space-y-5">
+            
+            {/* Premium */}
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium text-[#8b5cf6] flex items-center gap-2">
+                <Crown className="w-4 h-4" /> Premium
+              </h3>
+              <div className="bg-[#111] rounded-2xl p-4">
+                <label className="text-xs text-[#555] mb-2 block">License Key:</label>
+                <input
+                  type="text"
+                  placeholder="Enter license key"
+                  value={settings.licenseKey}
+                  onChange={(e) => handleChange('licenseKey', e.target.value)}
+                  className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-3 text-sm focus:border-[#8b5cf6] transition-colors outline-none"
+                />
+              </div>
+            </div>
+
+            {/* Interface */}
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium text-[#8b5cf6] flex items-center gap-2">
+                <Palette className="w-4 h-4" /> Interface
+              </h3>
+              <div className="bg-[#111] rounded-2xl p-4 space-y-3">
+                <div>
+                  <label className="text-xs text-[#555] mb-2 block">Accent:</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={settings.accentColor}
+                      onChange={(e) => handleChange('accentColor', e.target.value)}
+                      className="flex-1 bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none"
+                    />
+                    <motion.button 
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 bg-[#1a1a1a] border border-[#252525] rounded-xl text-sm hover:bg-[#252525]"
+                    >
+                      Generate
+                    </motion.button>
+                  </div>
+                </div>
+                <SettingRow label="Blur GUI Effect">
+                  <Toggle checked={settings.blurGuiEffect} onChange={(v) => handleChange('blurGuiEffect', v)} />
+                </SettingRow>
+                <SettingRow label="Blur Input">
+                  <Toggle checked={settings.blurInput} onChange={(v) => handleChange('blurInput', v)} />
+                </SettingRow>
+              </div>
+            </div>
+
+            {/* Features */}
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium text-[#8b5cf6] flex items-center gap-2">
+                <Zap className="w-4 h-4" /> Features
+              </h3>
+              <div className="bg-[#111] rounded-2xl p-4 space-y-1">
+                <SettingRow label="CVC Modifier" locked>
+                  <Toggle checked={settings.cvcModifier} onChange={(v) => handleChange('cvcModifier', v)} />
+                </SettingRow>
+                <SettingRow label="Remove Payment Agent (Stripe)" locked>
+                  <Toggle checked={settings.removePaymentAgent} onChange={(v) => handleChange('removePaymentAgent', v)} />
+                </SettingRow>
+                <SettingRow label="3D Bypass (Stripe)" locked>
+                  <Toggle checked={settings.threeDBypass} onChange={(v) => handleChange('threeDBypass', v)} />
+                </SettingRow>
+                <SettingRow label="Remove Zip Code" locked>
+                  <Toggle checked={settings.removeZipCode} onChange={(v) => handleChange('removeZipCode', v)} />
+                </SettingRow>
+                <SettingRow label="Block analytics" locked>
+                  <Toggle checked={settings.blockAnalytics} onChange={(v) => handleChange('blockAnalytics', v)} />
+                </SettingRow>
+              </div>
+            </div>
+
+            {/* Sounds */}
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium text-[#8b5cf6] flex items-center gap-2">
+                <Volume2 className="w-4 h-4" /> Sounds
+              </h3>
+              <div className="bg-[#111] rounded-2xl p-4 space-y-3">
+                <SettingRow label="Hit Sound" locked>
+                  <Toggle checked={settings.hitSound} onChange={(v) => handleChange('hitSound', v)} />
+                </SettingRow>
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
+                    <Lock className="w-3 h-3" /> Hit Sound Url:
+                  </label>
                   <input
                     type="text"
-                    placeholder="Enter license key"
-                    value={settings.licenseKey}
-                    onChange={(e) => handleChange('licenseKey', e.target.value)}
-                    className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-3 text-sm focus:border-[#8b5cf6] transition-colors"
+                    placeholder="Enter sound URL"
+                    value={settings.hitSoundUrl}
+                    onChange={(e) => handleChange('hitSoundUrl', e.target.value)}
+                    className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none"
                   />
                 </div>
               </div>
-
-              {/* Interface */}
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-[#8b5cf6] flex items-center gap-2">
-                  <Palette className="w-4 h-4" /> Interface
-                </h3>
-                <div className="bg-[#111] rounded-2xl p-4 space-y-3">
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 block">Accent:</label>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={settings.accentColor}
-                        onChange={(e) => handleChange('accentColor', e.target.value)}
-                        className="flex-1 bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm"
-                      />
-                      <motion.button 
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="px-4 py-2 bg-[#1a1a1a] border border-[#252525] rounded-xl text-sm hover:bg-[#252525]"
-                      >
-                        Generate
-                      </motion.button>
-                    </div>
-                  </div>
-                  <SettingRow label="Blur GUI Effect">
-                    <Toggle checked={settings.blurGuiEffect} onChange={(v) => handleChange('blurGuiEffect', v)} />
-                  </SettingRow>
-                  <SettingRow label="Blur Input">
-                    <Toggle checked={settings.blurInput} onChange={(v) => handleChange('blurInput', v)} />
-                  </SettingRow>
-                </div>
-              </div>
-
-              {/* Features */}
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-[#8b5cf6] flex items-center gap-2">
-                  <Zap className="w-4 h-4" /> Features
-                </h3>
-                <div className="bg-[#111] rounded-2xl p-4 space-y-1">
-                  <SettingRow label="CVC Modifier" locked>
-                    <Toggle checked={settings.cvcModifier} onChange={(v) => handleChange('cvcModifier', v)} />
-                  </SettingRow>
-                  <SettingRow label="Remove Payment Agent (Stripe)" locked>
-                    <Toggle checked={settings.removePaymentAgent} onChange={(v) => handleChange('removePaymentAgent', v)} />
-                  </SettingRow>
-                  <SettingRow label="3D Bypass (Stripe)" locked>
-                    <Toggle checked={settings.threeDBypass} onChange={(v) => handleChange('threeDBypass', v)} />
-                  </SettingRow>
-                  <SettingRow label="Remove Zip Code" locked>
-                    <Toggle checked={settings.removeZipCode} onChange={(v) => handleChange('removeZipCode', v)} />
-                  </SettingRow>
-                  <SettingRow label="Block analytics" locked>
-                    <Toggle checked={settings.blockAnalytics} onChange={(v) => handleChange('blockAnalytics', v)} />
-                  </SettingRow>
-                </div>
-              </div>
-
-              {/* Sounds */}
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-[#8b5cf6] flex items-center gap-2">
-                  <Volume2 className="w-4 h-4" /> Sounds
-                </h3>
-                <div className="bg-[#111] rounded-2xl p-4 space-y-3">
-                  <SettingRow label="Hit Sound" locked>
-                    <Toggle checked={settings.hitSound} onChange={(v) => handleChange('hitSound', v)} />
-                  </SettingRow>
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Hit Sound Url:
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Enter sound URL"
-                      value={settings.hitSoundUrl}
-                      onChange={(e) => handleChange('hitSoundUrl', e.target.value)}
-                      className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Screenshot */}
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-[#8b5cf6] flex items-center gap-2">
-                  <Camera className="w-4 h-4" /> Screenshot
-                </h3>
-                <div className="bg-[#111] rounded-2xl p-4">
-                  <SettingRow label="Hit Screenshot" locked>
-                    <Toggle checked={settings.hitScreenshot} onChange={(v) => handleChange('hitScreenshot', v)} />
-                  </SettingRow>
-                </div>
-              </div>
-
-              {/* Auto Clicker */}
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-[#8b5cf6] flex items-center gap-2">
-                  <Mouse className="w-4 h-4" /> Auto Clicker
-                </h3>
-                <div className="bg-[#111] rounded-2xl p-4 space-y-3">
-                  <SettingRow label="Click hCaptcha" locked>
-                    <Toggle checked={settings.clickHcaptcha} onChange={(v) => handleChange('clickHcaptcha', v)} />
-                  </SettingRow>
-                  <SettingRow label="Click on Load" locked>
-                    <Toggle checked={settings.clickOnLoad} onChange={(v) => handleChange('clickOnLoad', v)} />
-                  </SettingRow>
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Clicker Path:
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Enter path or use elementor"
-                      value={settings.clickerPath}
-                      onChange={(e) => handleChange('clickerPath', e.target.value)}
-                      className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Clicker Interval (ms):
-                    </label>
-                    <input
-                      type="text"
-                      value={settings.clickerInterval}
-                      onChange={(e) => handleChange('clickerInterval', e.target.value)}
-                      className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm"
-                    />
-                  </div>
-                  <SettingRow label="Ignore Disabled" locked>
-                    <Toggle checked={settings.ignoreDisabled} onChange={(v) => handleChange('ignoreDisabled', v)} />
-                  </SettingRow>
-                </div>
-              </div>
-
-              {/* Notification */}
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-[#8b5cf6] flex items-center gap-2">
-                  <Bell className="w-4 h-4" /> Notification
-                </h3>
-                <div className="bg-[#111] rounded-2xl p-4 space-y-3">
-                  <SettingRow label="Enable" locked>
-                    <Toggle checked={settings.notifyEnable} onChange={(v) => handleChange('notifyEnable', v)} />
-                  </SettingRow>
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Dismiss After (ms):
-                    </label>
-                    <input
-                      type="text"
-                      value={settings.dismissAfter}
-                      onChange={(e) => handleChange('dismissAfter', e.target.value)}
-                      className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Proxy */}
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-[#8b5cf6] flex items-center gap-2">
-                  <Globe className="w-4 h-4" /> Proxy
-                </h3>
-                <div className="bg-[#111] rounded-2xl p-4">
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Proxy Interval (mins):
-                    </label>
-                    <input
-                      type="text"
-                      value={settings.proxyInterval}
-                      onChange={(e) => handleChange('proxyInterval', e.target.value)}
-                      className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Autofill */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium text-[#8b5cf6] flex items-center gap-2">
-                    <CreditCard className="w-4 h-4" /> Autofill
-                  </h3>
-                  <Toggle checked={settings.autofillEnable} onChange={(v) => handleChange('autofillEnable', v)} />
-                </div>
-                <div className="bg-[#111] rounded-2xl p-4 space-y-3">
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Timeout (ms):
-                    </label>
-                    <input type="text" value={settings.timeout} onChange={(e) => handleChange('timeout', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm" />
-                  </div>
-                  <SettingRow label="Enable Interval" locked>
-                    <Toggle checked={settings.intervalEnable} onChange={(v) => handleChange('intervalEnable', v)} />
-                  </SettingRow>
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Interval (ms):
-                    </label>
-                    <input type="text" placeholder="Enter interval" value={settings.interval} onChange={(e) => handleChange('interval', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Name:
-                    </label>
-                    <input type="text" placeholder="Enter name" value={settings.name} onChange={(e) => handleChange('name', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Email:
-                    </label>
-                    <input type="email" placeholder="Enter email" value={settings.email} onChange={(e) => handleChange('email', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Card Number:
-                    </label>
-                    <input type="text" placeholder="Enter number" value={settings.cardNumber} onChange={(e) => handleChange('cardNumber', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Card Month:
-                    </label>
-                    <input type="text" placeholder="Enter month" value={settings.cardMonth} onChange={(e) => handleChange('cardMonth', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Card Year:
-                    </label>
-                    <input type="text" placeholder="Enter year" value={settings.cardYear} onChange={(e) => handleChange('cardYear', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Card CVC:
-                    </label>
-                    <input type="text" placeholder="Enter cvc" value={settings.cardCvc} onChange={(e) => handleChange('cardCvc', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Address 1:
-                    </label>
-                    <input type="text" placeholder="Enter address 1" value={settings.address1} onChange={(e) => handleChange('address1', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Building Number:
-                    </label>
-                    <input type="text" placeholder="Enter building number" value={settings.buildingNumber} onChange={(e) => handleChange('buildingNumber', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> City:
-                    </label>
-                    <input type="text" placeholder="Enter city" value={settings.city} onChange={(e) => handleChange('city', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> State:
-                    </label>
-                    <input type="text" placeholder="Enter state" value={settings.state} onChange={(e) => handleChange('state', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Country:
-                    </label>
-                    <input type="text" placeholder="Enter country" value={settings.country} onChange={(e) => handleChange('country', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Phone Number:
-                    </label>
-                    <input type="text" placeholder="Enter phone number" value={settings.phoneNumber} onChange={(e) => handleChange('phoneNumber', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Zip:
-                    </label>
-                    <input type="text" placeholder="Enter zip" value={settings.zip} onChange={(e) => handleChange('zip', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Telegram Hit Sender */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium text-[#8b5cf6] flex items-center gap-2">
-                    <Send className="w-4 h-4" /> Telegram Hit Sender
-                  </h3>
-                  <Toggle checked={settings.telegramEnable} onChange={(v) => handleChange('telegramEnable', v)} />
-                </div>
-                <div className="bg-[#111] rounded-2xl p-4 space-y-3">
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Bot Token:
-                    </label>
-                    <input type="text" placeholder="Enter bot token" value={settings.botToken} onChange={(e) => handleChange('botToken', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
-                      <Lock className="w-3 h-3" /> Chat Id:
-                    </label>
-                    <input type="text" placeholder="Enter chat id" value={settings.chatId} onChange={(e) => handleChange('chatId', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Reset Button */}
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => showToast("Settings reset to defaults")}
-                className="w-full py-4 rounded-2xl bg-[#8b5cf6] hover:bg-[#7c4fe0] font-medium flex items-center justify-center gap-2 transition-colors"
-              >
-                <RefreshCw className="w-4 h-4" />
-                Reset
-              </motion.button>
             </div>
-          </ScrollArea>
-        </motion.div>
+
+            {/* Screenshot */}
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium text-[#8b5cf6] flex items-center gap-2">
+                <Camera className="w-4 h-4" /> Screenshot
+              </h3>
+              <div className="bg-[#111] rounded-2xl p-4">
+                <SettingRow label="Hit Screenshot" locked>
+                  <Toggle checked={settings.hitScreenshot} onChange={(v) => handleChange('hitScreenshot', v)} />
+                </SettingRow>
+              </div>
+            </div>
+
+            {/* Auto Clicker */}
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium text-[#8b5cf6] flex items-center gap-2">
+                <Mouse className="w-4 h-4" /> Auto Clicker
+              </h3>
+              <div className="bg-[#111] rounded-2xl p-4 space-y-3">
+                <SettingRow label="Click hCaptcha" locked>
+                  <Toggle checked={settings.clickHcaptcha} onChange={(v) => handleChange('clickHcaptcha', v)} />
+                </SettingRow>
+                <SettingRow label="Click on Load" locked>
+                  <Toggle checked={settings.clickOnLoad} onChange={(v) => handleChange('clickOnLoad', v)} />
+                </SettingRow>
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
+                    <Lock className="w-3 h-3" /> Clicker Path:
+                  </label>
+                  <input type="text" placeholder="Enter path or use elementor" value={settings.clickerPath} onChange={(e) => handleChange('clickerPath', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none" />
+                </div>
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
+                    <Lock className="w-3 h-3" /> Clicker Interval (ms):
+                  </label>
+                  <input type="text" value={settings.clickerInterval} onChange={(e) => handleChange('clickerInterval', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none" />
+                </div>
+                <SettingRow label="Ignore Disabled" locked>
+                  <Toggle checked={settings.ignoreDisabled} onChange={(v) => handleChange('ignoreDisabled', v)} />
+                </SettingRow>
+              </div>
+            </div>
+
+            {/* Notification */}
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium text-[#8b5cf6] flex items-center gap-2">
+                <Bell className="w-4 h-4" /> Notification
+              </h3>
+              <div className="bg-[#111] rounded-2xl p-4 space-y-3">
+                <SettingRow label="Enable" locked>
+                  <Toggle checked={settings.notifyEnable} onChange={(v) => handleChange('notifyEnable', v)} />
+                </SettingRow>
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
+                    <Lock className="w-3 h-3" /> Dismiss After (ms):
+                  </label>
+                  <input type="text" value={settings.dismissAfter} onChange={(e) => handleChange('dismissAfter', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none" />
+                </div>
+              </div>
+            </div>
+
+            {/* Proxy */}
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium text-[#8b5cf6] flex items-center gap-2">
+                <Globe className="w-4 h-4" /> Proxy
+              </h3>
+              <div className="bg-[#111] rounded-2xl p-4">
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1">
+                    <Lock className="w-3 h-3" /> Proxy Interval (mins):
+                  </label>
+                  <input type="text" value={settings.proxyInterval} onChange={(e) => handleChange('proxyInterval', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none" />
+                </div>
+              </div>
+            </div>
+
+            {/* Autofill */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-medium text-[#8b5cf6] flex items-center gap-2">
+                  <CreditCard className="w-4 h-4" /> Autofill
+                </h3>
+                <Toggle checked={settings.autofillEnable} onChange={(v) => handleChange('autofillEnable', v)} />
+              </div>
+              <div className="bg-[#111] rounded-2xl p-4 space-y-3">
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1"><Lock className="w-3 h-3" /> Timeout (ms):</label>
+                  <input type="text" value={settings.timeout} onChange={(e) => handleChange('timeout', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none" />
+                </div>
+                <SettingRow label="Enable Interval" locked>
+                  <Toggle checked={settings.intervalEnable} onChange={(v) => handleChange('intervalEnable', v)} />
+                </SettingRow>
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1"><Lock className="w-3 h-3" /> Interval (ms):</label>
+                  <input type="text" placeholder="Enter interval" value={settings.interval} onChange={(e) => handleChange('interval', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none" />
+                </div>
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1"><Lock className="w-3 h-3" /> Name:</label>
+                  <input type="text" placeholder="Enter name" value={settings.name} onChange={(e) => handleChange('name', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none" />
+                </div>
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1"><Lock className="w-3 h-3" /> Email:</label>
+                  <input type="email" placeholder="Enter email" value={settings.email} onChange={(e) => handleChange('email', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none" />
+                </div>
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1"><Lock className="w-3 h-3" /> Card Number:</label>
+                  <input type="text" placeholder="Enter number" value={settings.cardNumber} onChange={(e) => handleChange('cardNumber', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none" />
+                </div>
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1"><Lock className="w-3 h-3" /> Card Month:</label>
+                  <input type="text" placeholder="Enter month" value={settings.cardMonth} onChange={(e) => handleChange('cardMonth', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none" />
+                </div>
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1"><Lock className="w-3 h-3" /> Card Year:</label>
+                  <input type="text" placeholder="Enter year" value={settings.cardYear} onChange={(e) => handleChange('cardYear', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none" />
+                </div>
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1"><Lock className="w-3 h-3" /> Card CVC:</label>
+                  <input type="text" placeholder="Enter cvc" value={settings.cardCvc} onChange={(e) => handleChange('cardCvc', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none" />
+                </div>
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1"><Lock className="w-3 h-3" /> Address 1:</label>
+                  <input type="text" placeholder="Enter address 1" value={settings.address1} onChange={(e) => handleChange('address1', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none" />
+                </div>
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1"><Lock className="w-3 h-3" /> Building Number:</label>
+                  <input type="text" placeholder="Enter building number" value={settings.buildingNumber} onChange={(e) => handleChange('buildingNumber', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none" />
+                </div>
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1"><Lock className="w-3 h-3" /> City:</label>
+                  <input type="text" placeholder="Enter city" value={settings.city} onChange={(e) => handleChange('city', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none" />
+                </div>
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1"><Lock className="w-3 h-3" /> State:</label>
+                  <input type="text" placeholder="Enter state" value={settings.state} onChange={(e) => handleChange('state', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none" />
+                </div>
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1"><Lock className="w-3 h-3" /> Country:</label>
+                  <input type="text" placeholder="Enter country" value={settings.country} onChange={(e) => handleChange('country', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none" />
+                </div>
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1"><Lock className="w-3 h-3" /> Phone Number:</label>
+                  <input type="text" placeholder="Enter phone number" value={settings.phoneNumber} onChange={(e) => handleChange('phoneNumber', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none" />
+                </div>
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1"><Lock className="w-3 h-3" /> Zip:</label>
+                  <input type="text" placeholder="Enter zip" value={settings.zip} onChange={(e) => handleChange('zip', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none" />
+                </div>
+              </div>
+            </div>
+
+            {/* Telegram Hit Sender */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-medium text-[#8b5cf6] flex items-center gap-2">
+                  <Send className="w-4 h-4" /> Telegram Hit Sender
+                </h3>
+                <Toggle checked={settings.telegramEnable} onChange={(v) => handleChange('telegramEnable', v)} />
+              </div>
+              <div className="bg-[#111] rounded-2xl p-4 space-y-3">
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1"><Lock className="w-3 h-3" /> Bot Token:</label>
+                  <input type="text" placeholder="Enter bot token" value={settings.botToken} onChange={(e) => handleChange('botToken', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none" />
+                </div>
+                <div>
+                  <label className="text-xs text-[#555] mb-2 flex items-center gap-1"><Lock className="w-3 h-3" /> Chat Id:</label>
+                  <input type="text" placeholder="Enter chat id" value={settings.chatId} onChange={(e) => handleChange('chatId', e.target.value)} className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-2 text-sm outline-none" />
+                </div>
+              </div>
+            </div>
+
+            {/* Reset Button */}
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => showToast("Settings reset to defaults")}
+              className="w-full py-4 rounded-2xl bg-[#8b5cf6] hover:bg-[#7c4fe0] font-medium flex items-center justify-center gap-2 transition-colors"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Reset
+            </motion.button>
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );
 };
 
-// Gateway Modal - Single X button
+// Gateway Modal - BIG
 const GatewayModal = ({ open, onClose }) => {
   const [gateways, setGateways] = useState([
     { id: "stripe", name: "Stripe", enabled: true },
@@ -535,15 +487,12 @@ const GatewayModal = ({ open, onClose }) => {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent hideCloseButton={true} className="max-w-md w-[90vw] bg-[#0a0a0a] border border-[#1a1a1a] text-white p-0 overflow-hidden rounded-3xl" data-testid="gateway-modal">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-        >
-          {/* Header - Single X button */}
-          <div className="flex items-center justify-between p-5 border-b border-[#1a1a1a]">
+      <DialogContent className="w-[50vw] h-[75vh] max-w-none bg-[#0a0a0a] border border-[#1a1a1a] text-white p-0 rounded-2xl" data-testid="gateway-modal">
+        <div className="h-full flex flex-col">
+          {/* Header */}
+          <div className="flex items-center justify-between p-5 border-b border-[#1a1a1a] shrink-0">
             <h2 className="text-xl font-semibold">Gateways</h2>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <motion.button 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -562,41 +511,47 @@ const GatewayModal = ({ open, onClose }) => {
               >
                 <RefreshCw className="w-3 h-3" /> Reset
               </motion.button>
+              <motion.button 
+                whileHover={{ scale: 1.2, rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={onClose}
+                className="p-2 rounded-xl hover:bg-[#1a1a1a] transition-all duration-300"
+              >
+                <X className="w-6 h-6" />
+              </motion.button>
             </div>
           </div>
 
-          {/* Gateway List */}
-          <ScrollArea className="h-[400px]">
-            <div className="p-4 space-y-2">
-              {gateways.map((gateway, index) => (
-                <motion.div 
-                  key={gateway.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  whileHover={{ x: 5 }}
-                  className="flex items-center justify-between py-4 px-4 rounded-2xl bg-[#111] border border-[#1a1a1a] hover:border-[#252525] transition-all"
-                  data-testid={`gateway-${gateway.id}`}
-                >
-                  <div className="flex items-center gap-3">
-                    <Lock className="w-4 h-4 text-[#444]" />
-                    <span className="text-sm font-medium">{gateway.name}</span>
-                  </div>
-                  <Toggle 
-                    checked={gateway.enabled} 
-                    onChange={() => toggleGateway(gateway.id)} 
-                  />
-                </motion.div>
-              ))}
-            </div>
-          </ScrollArea>
-        </motion.div>
+          {/* Content - Scrollable */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-2">
+            {gateways.map((gateway, index) => (
+              <motion.div 
+                key={gateway.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.05 }}
+                whileHover={{ x: 5 }}
+                className="flex items-center justify-between py-4 px-4 rounded-2xl bg-[#111] border border-[#1a1a1a] hover:border-[#252525] transition-all"
+                data-testid={`gateway-${gateway.id}`}
+              >
+                <div className="flex items-center gap-3">
+                  <Lock className="w-4 h-4 text-[#444]" />
+                  <span className="text-sm font-medium">{gateway.name}</span>
+                </div>
+                <Toggle 
+                  checked={gateway.enabled} 
+                  onChange={() => toggleGateway(gateway.id)} 
+                />
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );
 };
 
-// Bin Library Modal - Single X button
+// Bin Library Modal - BIG
 const BinLibraryModal = ({ open, onClose, onUseBin }) => {
   const [expandedCategories, setExpandedCategories] = useState({});
   
@@ -667,134 +622,119 @@ const BinLibraryModal = ({ open, onClose, onUseBin }) => {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent hideCloseButton={true} className="max-w-xl w-[90vw] h-[70vh] bg-[#0a0a0a] border border-[#1a1a1a] text-white p-0 overflow-hidden rounded-3xl" data-testid="bin-library-modal">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="h-full flex flex-col"
-        >
-          {/* Header - Single X */}
-          <div className="flex items-center justify-between p-5 border-b border-[#1a1a1a]">
+      <DialogContent className="w-[50vw] h-[75vh] max-w-none bg-[#0a0a0a] border border-[#1a1a1a] text-white p-0 rounded-2xl" data-testid="bin-library-modal">
+        <div className="h-full flex flex-col">
+          {/* Header */}
+          <div className="flex items-center justify-between p-5 border-b border-[#1a1a1a] shrink-0">
             <h2 className="text-xl font-semibold flex items-center gap-3">
               <Library className="w-6 h-6 text-[#8b5cf6]" />
               Bin Library
             </h2>
+            <motion.button 
+              whileHover={{ scale: 1.2, rotate: 90 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={onClose}
+              className="p-2 rounded-xl hover:bg-[#1a1a1a] transition-all duration-300"
+            >
+              <X className="w-6 h-6" />
+            </motion.button>
           </div>
 
-          {/* Content */}
-          <ScrollArea className="flex-1">
-            <div className="p-4 space-y-3">
-              {binCategories.map((category, catIndex) => (
-                <motion.div 
-                  key={category.site}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: catIndex * 0.05 }}
-                  className="bg-[#111] rounded-2xl border border-[#1a1a1a] overflow-hidden"
+          {/* Content - Scrollable */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            {binCategories.map((category, catIndex) => (
+              <motion.div 
+                key={category.site}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: catIndex * 0.05 }}
+                className="bg-[#111] rounded-2xl border border-[#1a1a1a] overflow-hidden"
+              >
+                {/* Category Header */}
+                <motion.button
+                  onClick={() => toggleCategory(category.site)}
+                  whileHover={{ backgroundColor: "rgba(255,255,255,0.02)" }}
+                  className="w-full flex items-center justify-between p-4 transition-colors"
+                  data-testid={`category-${category.site.toLowerCase()}`}
                 >
-                  {/* Category Header */}
-                  <motion.button
-                    onClick={() => toggleCategory(category.site)}
-                    whileHover={{ backgroundColor: "rgba(255,255,255,0.02)" }}
-                    className="w-full flex items-center justify-between p-4 transition-colors"
-                    data-testid={`category-${category.site.toLowerCase()}`}
+                  <div className="flex items-center gap-4">
+                    <span className="font-medium text-white">{category.site}</span>
+                    <div className="flex gap-1">
+                      {category.providers.map(p => (
+                        <span key={p.type} className={`text-[10px] px-2 py-0.5 rounded-full border ${getProviderColor(p.type)}`}>
+                          {p.type}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <motion.div
+                    animate={{ rotate: expandedCategories[category.site] ? 90 : 0 }}
+                    transition={{ duration: 0.2 }}
                   >
-                    <div className="flex items-center gap-4">
-                      <span className="font-medium text-white">{category.site}</span>
-                      <div className="flex gap-1">
-                        {category.providers.map(p => (
-                          <span key={p.type} className={`text-[10px] px-2 py-0.5 rounded-full border ${getProviderColor(p.type)}`}>
-                            {p.type}
-                          </span>
+                    <ChevronRight className="w-5 h-5 text-[#555]" />
+                  </motion.div>
+                </motion.button>
+
+                {/* Expanded BINs */}
+                <AnimatePresence>
+                  {expandedCategories[category.site] && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="p-4 pt-0 space-y-3">
+                        {category.providers.map((provider, pIndex) => (
+                          <motion.div 
+                            key={provider.type}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: pIndex * 0.05 }}
+                            className="space-y-2"
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className={`text-xs px-2 py-1 rounded-lg border ${getProviderColor(provider.type)}`}>
+                                {provider.type}
+                              </span>
+                            </div>
+                            <div className="grid grid-cols-3 gap-2">
+                              {provider.bins.map((bin, binIndex) => (
+                                <motion.div
+                                  key={bin}
+                                  initial={{ opacity: 0, scale: 0.9 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                  transition={{ delay: binIndex * 0.03 }}
+                                  whileHover={{ scale: 1.02 }}
+                                  className="flex items-center justify-between bg-[#0a0a0a] rounded-xl p-3 border border-[#1a1a1a] hover:border-[#8b5cf6]/30"
+                                >
+                                  <span className="font-mono text-sm text-white">{bin}</span>
+                                  <motion.button
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                    onClick={() => handleUseBin(bin)}
+                                    className="px-3 py-1 text-xs font-medium rounded-lg bg-[#8b5cf6] hover:bg-[#7c4fe0] transition-colors"
+                                    data-testid={`use-bin-${bin}`}
+                                  >
+                                    Use
+                                  </motion.button>
+                                </motion.div>
+                              ))}
+                            </div>
+                          </motion.div>
                         ))}
                       </div>
-                    </div>
-                    <motion.div
-                      animate={{ rotate: expandedCategories[category.site] ? 90 : 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <ChevronRight className="w-5 h-5 text-[#555]" />
                     </motion.div>
-                  </motion.button>
-
-                  {/* Expanded BINs */}
-                  <AnimatePresence>
-                    {expandedCategories[category.site] && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="p-4 pt-0 space-y-3">
-                          {category.providers.map((provider, pIndex) => (
-                            <motion.div 
-                              key={provider.type}
-                              initial={{ opacity: 0, x: -10 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: pIndex * 0.05 }}
-                              className="space-y-2"
-                            >
-                              <div className="flex items-center gap-2">
-                                <span className={`text-xs px-2 py-1 rounded-lg border ${getProviderColor(provider.type)}`}>
-                                  {provider.type}
-                                </span>
-                              </div>
-                              <div className="grid grid-cols-3 gap-2">
-                                {provider.bins.map((bin, binIndex) => (
-                                  <motion.div
-                                    key={bin}
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    transition={{ delay: binIndex * 0.03 }}
-                                    whileHover={{ scale: 1.02 }}
-                                    className="flex items-center justify-between bg-[#0a0a0a] rounded-xl p-3 border border-[#1a1a1a] hover:border-[#8b5cf6]/30"
-                                  >
-                                    <span className="font-mono text-sm text-white">{bin}</span>
-                                    <motion.button
-                                      whileHover={{ scale: 1.1 }}
-                                      whileTap={{ scale: 0.9 }}
-                                      onClick={() => handleUseBin(bin)}
-                                      className="px-3 py-1 text-xs font-medium rounded-lg bg-[#8b5cf6] hover:bg-[#7c4fe0] transition-colors"
-                                      data-testid={`use-bin-${bin}`}
-                                    >
-                                      Use
-                                    </motion.button>
-                                  </motion.div>
-                                ))}
-                              </div>
-                            </motion.div>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              ))}
-            </div>
-          </ScrollArea>
-        </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );
-};
-
-// Custom Toast Function
-const showToast = (message) => {
-  toast.custom((t) => (
-    <motion.div
-      initial={{ opacity: 0, y: 50, scale: 0.9 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: 20, scale: 0.9 }}
-      className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-[#1a1a1a] border border-[#252525] shadow-xl"
-    >
-      <div className="w-6 h-6 rounded-full bg-[#8b5cf6] flex items-center justify-center">
-        <Check className="w-4 h-4 text-white" />
-      </div>
-      <span className="text-sm text-white">{message}</span>
-    </motion.div>
-  ), { duration: 2000 });
 };
 
 // Main App Component
@@ -974,7 +914,7 @@ function App() {
                 placeholder="Enter BIN (e.g., 414720)"
                 value={binValue}
                 onChange={(e) => setBinValue(e.target.value)}
-                className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-3 text-sm focus:border-[#8b5cf6] transition-colors"
+                className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-3 text-sm focus:border-[#8b5cf6] transition-colors outline-none"
                 data-testid="bin-input"
               />
               
@@ -1010,7 +950,7 @@ function App() {
                             placeholder="Enter Proxies (optional)"
                             value={proxyList}
                             onChange={(e) => setProxyList(e.target.value)}
-                            className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-3 min-h-[60px] resize-none text-sm focus:border-[#8b5cf6] transition-colors"
+                            className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-3 min-h-[60px] resize-none text-sm focus:border-[#8b5cf6] transition-colors outline-none"
                             data-testid="proxy-input"
                           />
                         </div>
@@ -1024,7 +964,7 @@ function App() {
                             placeholder="Enter CC List (optional)"
                             value={ccList}
                             onChange={(e) => setCcList(e.target.value)}
-                            className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-3 min-h-[60px] resize-none text-sm focus:border-[#8b5cf6] transition-colors"
+                            className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-3 min-h-[60px] resize-none text-sm focus:border-[#8b5cf6] transition-colors outline-none"
                             data-testid="cc-input"
                           />
                         </div>
@@ -1038,7 +978,7 @@ function App() {
                             placeholder="Enter Email List (optional)"
                             value={emailList}
                             onChange={(e) => setEmailList(e.target.value)}
-                            className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-3 min-h-[60px] resize-none text-sm focus:border-[#8b5cf6] transition-colors"
+                            className="w-full bg-[#0a0a0a] border border-[#252525] rounded-xl px-4 py-3 min-h-[60px] resize-none text-sm focus:border-[#8b5cf6] transition-colors outline-none"
                             data-testid="email-input"
                           />
                         </div>
@@ -1102,7 +1042,7 @@ function App() {
               </div>
 
               {/* Logs Content */}
-              <ScrollArea className="flex-1 p-4 min-h-[400px]">
+              <div className="flex-1 overflow-y-auto p-4 min-h-[400px]">
                 <div className="space-y-0.5">
                   {logs.map((log, index) => (
                     <LogEntry 
@@ -1114,7 +1054,7 @@ function App() {
                     />
                   ))}
                 </div>
-              </ScrollArea>
+              </div>
             </div>
           </motion.div>
         </div>
