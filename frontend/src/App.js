@@ -159,23 +159,23 @@ const SettingsModal = ({ open, onClose }) => {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="w-[50vw] h-[75vh] max-w-none bg-[#0a0a0a] border border-[#1a1a1a] text-white p-0 rounded-2xl" data-testid="settings-modal">
-        <div className="h-full flex flex-col">
-          {/* Header */}
-          <div className="flex items-center justify-between p-5 border-b border-[#1a1a1a] shrink-0">
-            <h2 className="text-xl font-semibold">Settings</h2>
-            <motion.button 
-              whileHover={{ scale: 1.2, rotate: 90 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={onClose}
-              className="p-2 rounded-xl hover:bg-[#1a1a1a] transition-all duration-300"
-            >
-              <X className="w-6 h-6" />
-            </motion.button>
-          </div>
+      <DialogContent className="w-[50vw] h-[75vh] max-w-none bg-[#0a0a0a] border border-[#1a1a1a] text-white p-0 rounded-2xl overflow-hidden" data-testid="settings-modal">
+        {/* Header - Fixed */}
+        <div className="flex items-center justify-between p-5 border-b border-[#1a1a1a] bg-[#0a0a0a]">
+          <h2 className="text-xl font-semibold">Settings</h2>
+          <motion.button 
+            whileHover={{ scale: 1.2, rotate: 90 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={onClose}
+            className="p-2 rounded-xl hover:bg-[#1a1a1a] transition-all duration-300"
+          >
+            <X className="w-6 h-6" />
+          </motion.button>
+        </div>
 
-          {/* Content - Scrollable */}
-          <div className="flex-1 overflow-y-auto p-5 space-y-5">
+        {/* Scrollable Content */}
+        <div className="overflow-y-auto" style={{ height: 'calc(75vh - 80px)' }}>
+          <div className="p-5 space-y-5">
             
             {/* Premium */}
             <div className="space-y-2">
