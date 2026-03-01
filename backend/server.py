@@ -247,10 +247,12 @@ async def add_bin(bin_entry: BinEntry):
 # Config
 @app.get("/api/config")
 async def get_config():
-    config = await config_col.find_one({}, {"_id": 0})
+    config = await config_col.find_one({})
     if not config:
-        config = Config().model_dump()
-        await config_col.insert_one(config)
+        default_config = Config().model_dump()
+        await config_col.insert_one(default_config.copy())
+        return default_config
+    config.pop("_id", None)
     return config
 
 @app.post("/api/config")
