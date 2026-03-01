@@ -667,7 +667,7 @@ const BinLibraryModal = ({ open, onClose, onUseBin }) => {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-xl w-[90vw] h-[70vh] bg-[#0a0a0a] border border-[#1a1a1a] text-white p-0 overflow-hidden rounded-3xl" data-testid="bin-library-modal">
+      <DialogContent hideCloseButton={true} className="max-w-xl w-[90vw] h-[70vh] bg-[#0a0a0a] border border-[#1a1a1a] text-white p-0 overflow-hidden rounded-3xl" data-testid="bin-library-modal">
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
