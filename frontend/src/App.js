@@ -535,7 +535,7 @@ const GatewayModal = ({ open, onClose }) => {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md w-[90vw] bg-[#0a0a0a] border border-[#1a1a1a] text-white p-0 overflow-hidden rounded-3xl" data-testid="gateway-modal">
+      <DialogContent hideCloseButton={true} className="max-w-md w-[90vw] bg-[#0a0a0a] border border-[#1a1a1a] text-white p-0 overflow-hidden rounded-3xl" data-testid="gateway-modal">
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
