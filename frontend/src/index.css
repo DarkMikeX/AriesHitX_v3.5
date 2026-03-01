@@ -8,17 +8,12 @@
   --bg-primary: #0a0a0a;
   --bg-secondary: #111111;
   --bg-tertiary: #1a1a1a;
-  --bg-card: #151515;
-  --border-color: #252525;
-  --border-light: #333333;
+  --border-color: #1a1a1a;
+  --border-light: #252525;
   --text-primary: #ffffff;
-  --text-secondary: #a0a0a0;
-  --text-muted: #666666;
+  --text-secondary: #888888;
+  --text-muted: #555555;
   --accent: #8b5cf6;
-  --accent-hover: #7c4fe0;
-  --success: #22c55e;
-  --error: #ef4444;
-  --warning: #f59e0b;
 }
 
 * {
@@ -35,129 +30,24 @@ html, body {
   overflow-x: hidden;
 }
 
-/* Custom Scrollbar - Dark */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-light);
+  background: #252525;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
+  background: #333;
 }
-
-/* Glass Panel - Subtle Dark */
-.glass-panel {
-  background: rgba(21, 21, 21, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-}
-
-.glass-panel-solid {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-}
-
-/* Input Styles */
-.dark-input {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  color: var(--text-primary);
-  padding: 12px 16px;
-  width: 100%;
-  transition: border-color 0.2s ease;
-}
-
-.dark-input:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-
-.dark-input::placeholder {
-  color: var(--text-muted);
-}
-
-/* Button Styles */
-.btn-primary {
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 12px 20px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-primary:hover {
-  background: var(--accent-hover);
-}
-
-.btn-secondary {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 10px 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-secondary:hover {
-  background: var(--border-color);
-}
-
-/* Toggle Switch */
-.toggle-track {
-  width: 44px;
-  height: 24px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  position: relative;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.toggle-track.active {
-  background: var(--accent);
-  border-color: var(--accent);
-}
-
-.toggle-knob {
-  width: 18px;
-  height: 18px;
-  background: white;
-  border-radius: 50%;
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  transition: transform 0.2s ease;
-}
-
-.toggle-track.active .toggle-knob {
-  transform: translateX(20px);
-}
-
-/* Log Entry Colors */
-.log-success { color: var(--success); }
-.log-error { color: var(--error); }
-.log-warning { color: var(--warning); }
-.log-info { color: #3b82f6; }
-.log-timestamp { color: var(--text-muted); }
 
 /* Selection */
 ::selection {
@@ -171,41 +61,59 @@ div[style*="position: fixed"][style*="bottom"] > a[href*="emergent"] {
   display: none !important;
 }
 
-/* Subtle background gradient */
-.bg-gradient {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(ellipse at 20% 20%, rgba(139, 92, 246, 0.03) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(59, 130, 246, 0.02) 0%, transparent 50%);
-  pointer-events: none;
+/* Smooth transitions for all elements */
+* {
+  transition-property: background-color, border-color, color, opacity, transform;
+  transition-duration: 0.2s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus states */
+input:focus, textarea:focus {
+  outline: none;
+}
+
+/* Dialog overlay animation */
+[data-state="open"] {
+  animation: fadeIn 0.2s ease-out;
+}
+
+[data-state="closed"] {
+  animation: fadeOut 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 @layer base {
   :root {
     --background: 0 0% 4%;
     --foreground: 0 0% 100%;
-    --card: 0 0% 6%;
+    --card: 0 0% 7%;
     --card-foreground: 0 0% 100%;
-    --popover: 0 0% 6%;
+    --popover: 0 0% 4%;
     --popover-foreground: 0 0% 100%;
     --primary: 263 70% 58%;
     --primary-foreground: 0 0% 100%;
     --secondary: 0 0% 10%;
     --secondary-foreground: 0 0% 100%;
     --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 65%;
+    --muted-foreground: 0 0% 53%;
     --accent: 263 70% 58%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
+    --border: 0 0% 10%;
+    --input: 0 0% 10%;
     --ring: 263 70% 58%;
-    --radius: 0.5rem;
+    --radius: 1rem;
   }
 }
 
