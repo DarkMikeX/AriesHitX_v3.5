@@ -170,10 +170,13 @@ async def health():
 # Settings
 @app.get("/api/settings")
 async def get_settings():
-    settings = await settings_col.find_one({}, {"_id": 0})
+    settings = await settings_col.find_one({})
     if not settings:
-        settings = Settings().model_dump()
-        await settings_col.insert_one(settings)
+        default_settings = Settings().model_dump()
+        await settings_col.insert_one(default_settings.copy())
+        return default_settings
+    # Remove _id before returning
+    settings.pop("_id", None)
     return settings
 
 @app.post("/api/settings")
