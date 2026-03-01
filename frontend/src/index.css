@@ -208,6 +208,15 @@ input:focus, textarea:focus {
   color: white;
 }
 
+/* Hide external badge */
+[class*="emergent"], [id*="emergent"], [data-testid*="emergent"],
+div[style*="position: fixed"][style*="bottom"] > a[href*="emergent"],
+.made-with-emergent, #emergent-badge {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
 @layer base {
   :root {
     --background: 0 0% 3.9%;
