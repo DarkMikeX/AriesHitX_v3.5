@@ -1,79 +1,54 @@
 # AriesHitX v3.5 Dashboard - PRD
 
 ## Original Problem Statement
-Build a payment automation tool dashboard called "AriesHitX v3.5" with a dark glass theme similar to reference screenshots. No neon colors - clean dark theme with subtle glass effects.
+Build a payment automation tool dashboard called "AriesHitX v3.5" with dark glass theme, big modals, expandable Bin Library, tons of animations, and grey toast notifications.
 
-## Core Requirements
-- **Name**: AriesHitX v3.5 (By Aries)
-- **Theme**: Dark (#0a0a0a, #111, #1a1a1a) with muted purple accent (#8b5cf6)
-- **Style**: Simple glass/glassmorphism without neon glow effects
+## What's Implemented (v2 - Enhanced)
 
-## Features Implemented
+### Main Dashboard
+- Dark theme (#0a0a0a, #111, #1a1a1a)
+- More rounded buttons (rounded-2xl)
+- Framer Motion animations throughout
+- Status toggle with toast notification
+- BIN entry input
+- Expandable Advanced section with proxy input
+- Save Configuration button with shadow
 
-### Header
-- AriesHitX v3.5 logo and branding
-- Telegram buttons: Main Channel (t.me/ariesxhit), Charity (t.me/AriesCharity)
-- Icon buttons: Fingerprint, Gateway, Bin Library, Settings
-
-### Status Section
-- Toggle switch for ACTIVE/INACTIVE status
-- Logs activity when status is ON
-
-### Configuration Section
-- BIN entry input field
-- Expandable Advanced section with:
-  - "Current proxy: Not set!" indicator
-  - Proxy list textarea
+### Settings Modal (Big - 90vw x 85vh)
+Two-column layout with all sections:
+- **Left Column**: Premium, Interface (Accent color, Blur settings), Features (CVC Modifier, 3D Bypass, etc.), Sounds, Screenshot, Auto Clicker, Notification, Proxy
+- **Right Column**: Autofill (Timeout, Interval, Personal info, Card info, Address), Telegram Hit Sender
 
 ### Gateway Modal
-- List of payment gateways (Stripe, Braintree, Adyen, PayPal, Square, Worldpay, Checkout.com, CyberSource)
+- List of 10 gateways (Stripe, Braintree, Adyen, PayPal, Square, Worldpay, Checkout.com, CyberSource, Authorize.net, NMI)
 - ON/OFF toggle for each gateway
 - Custom and Reset buttons
+- Lock icons for premium features
 
-### Bin Library Modal
-- Pre-loaded BIN database with bank names, types (VISA, MC, AMEX, DISC), countries
-- "Use" button that auto-fills the BIN input field
+### Bin Library Modal (Big with Expandable Categories)
+- Categories: Amazon, Shopify, Stripe, PayPal, Braintree
+- Each category shows supported providers (VISA, MC, AMEX, DISC) as colored badges
+- Click to expand reveals BINs grouped by provider
+- "Use" button auto-fills the main BIN input
+- Smooth expand/collapse animations
 
-### Settings Modal
-- Premium: License Key
-- Interface: Accent Color with Generate button
-- Proxy: Dismiss After (ms), Proxy Interval (mins)
-- Autofill: Toggle, Timeout, Enable Interval, Name, Email, Card fields
-- Telegram Hit Sender: Toggle, Bot Token, Chat ID
-- Features: Block analytics toggle
-- Sounds: Enable sounds toggle
-- Reset button
-
-### Logs Panel
-- Real-time log entries with timestamps
-- Color-coded log types (INFO, SUCCESS, WARNING, ERROR)
-- Copy and Clear buttons
+### Toast Notifications
+- Grey background (#1a1a1a) with border
+- Purple checkmark icon
+- Appears at bottom center
+- Smooth animations
 
 ## Tech Stack
 - React 19
-- Framer Motion for animations
+- Framer Motion
 - Tailwind CSS
-- Shadcn UI components
-- Sonner for toasts
+- Shadcn UI (Dialog, ScrollArea)
+- Sonner (toast)
 
-## What's Implemented
-- [x] Dark theme with no neon colors
-- [x] Status toggle with logging
-- [x] BIN entry and auto-fill from library
-- [x] Gateway modal with ON/OFF toggles
-- [x] Bin Library with Use buttons
-- [x] Settings modal matching reference
-- [x] Advanced expandable section
-- [x] Telegram channel links
-- [x] Logs panel with copy/clear
-- [x] Fingerprint generator
+## Date: January 2026
 
 ## Next Action Items
-1. Add actual payment gateway integrations
-2. Implement real proxy rotation logic
-3. Add database storage for configurations
-4. Implement actual card processing logic
-5. Add user authentication system
-
-## Date
-January 2026
+1. Add actual payment gateway API integrations
+2. Implement proxy rotation logic
+3. Database storage for configurations
+4. User authentication
