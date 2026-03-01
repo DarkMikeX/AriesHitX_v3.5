@@ -1,0 +1,117 @@
+{
+  "brand_identity": {
+    "name": "AriesHitX v3.5",
+    "tone": "Cyberpunk, Elite, Automated, Glass-Tech",
+    "description": "A premium payment automation dashboard with a high-end glassmorphism aesthetic.",
+    "banned_terms": ["Emergent"],
+    "target_audience": "Automation power users, tech-savvy, 'hacker' aesthetic admirers."
+  },
+  "typography": {
+    "font_family": {
+      "heading": "Space Grotesk, Outfit, sans-serif",
+      "body": "Inter, sans-serif",
+      "mono": "JetBrains Mono, Fira Code, monospace"
+    },
+    "scale": {
+      "h1": "text-4xl md:text-6xl font-bold tracking-tight",
+      "h2": "text-3xl font-semibold tracking-tight",
+      "h3": "text-xl font-medium tracking-wide",
+      "body": "text-sm leading-relaxed text-gray-300",
+      "mono": "text-xs font-mono text-purple-200/80"
+    }
+  },
+  "colors": {
+    "palette": {
+      "background": {
+        "primary": "#05050A",
+        "secondary": "#0A0A12",
+        "glass": "rgba(20, 20, 30, 0.4)",
+        "glass_hover": "rgba(30, 30, 50, 0.5)"
+      },
+      "border": {
+        "subtle": "rgba(255, 255, 255, 0.08)",
+        "highlight": "rgba(139, 92, 246, 0.3)"
+      },
+      "accent": {
+        "primary": "#8B5CF6",
+        "secondary": "#3B82F6",
+        "cyan": "#00F0FF",
+        "success": "#10B981",
+        "danger": "#EF4444",
+        "glow": "rgba(139, 92, 246, 0.5)"
+      },
+      "text": {
+        "primary": "#FFFFFF",
+        "secondary": "#94A3B8",
+        "muted": "#64748B"
+      }
+    },
+    "gradients": {
+      "primary": "bg-gradient-to-r from-violet-600 to-indigo-600",
+      "glass_surface": "bg-gradient-to-br from-white/5 to-white/0",
+      "glow_text": "bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60"
+    }
+  },
+  "visual_enhancers": {
+    "glassmorphism": {
+      "base": "backdrop-blur-xl bg-black/40 border border-white/10 shadow-xl",
+      "hover": "hover:bg-white/5 hover:border-white/20 transition-all duration-300",
+      "active": "active:scale-95 duration-100"
+    },
+    "shadows": {
+      "neon": "shadow-[0_0_20px_rgba(139,92,246,0.3)]",
+      "card": "shadow-xl shadow-black/50"
+    },
+    "animations": {
+      "float": "animate-float",
+      "pulse": "animate-pulse-slow",
+      "shimmer": "animate-shimmer"
+    }
+  },
+  "layout": {
+    "structure": "Single-page dashboard with floating glass panels.",
+    "grid_system": "Bento Grid: Mixed span sizes (col-span-1, col-span-2) for widget density.",
+    "spacing": "Generous gaps (gap-6) to allow the glass effect to breathe.",
+    "container": "max-w-7xl mx-auto p-4 md:p-8"
+  },
+  "components": {
+    "StatusToggle": {
+      "description": "Large, central toggle switch with neon glow. Green for ON, Red/Gray for OFF.",
+      "styles": "w-full h-16 rounded-full glass-panel flex items-center justify-between px-2 cursor-pointer transition-all"
+    },
+    "BinInput": {
+      "description": "Central feature. Large input field with a 'Blue Box' scanner effect on focus/hover.",
+      "styles": "h-14 bg-black/50 border-blue-500/30 text-lg focus:border-blue-400 focus:shadow-[0_0_15px_rgba(59,130,246,0.5)] placeholder:text-blue-500/30"
+    },
+    "LogsPanel": {
+      "description": "Terminal-style scrolling log window. Monospace font. Timestamps.",
+      "styles": "font-mono text-xs bg-black/80 border-t-2 border-purple-500/50 h-64 overflow-y-auto p-4 rounded-b-xl"
+    },
+    "GlassCard": {
+      "description": "The fundamental building block. Used for every section.",
+      "styles": "relative overflow-hidden rounded-xl border border-white/10 bg-white/5 backdrop-blur-md shadow-2xl"
+    }
+  },
+  "image_urls": {
+    "background_texture": "https://images.unsplash.com/photo-1772056384713-dc57d929df53?crop=entropy&cs=srgb&fm=jpg&q=85",
+    "glass_texture": "https://images.unsplash.com/photo-1736196075570-1ca367e50927?crop=entropy&cs=srgb&fm=jpg&q=85"
+  },
+  "instructions_to_main_agent": [
+    "1. THEME ENFORCEMENT: The entire app must be DARK MODE. Force `dark` class on the html/body.",
+    "2. BRANDING: Use 'AriesHitX v3.5' in the header. Do NOT display 'Emergent' anywhere.",
+    "3. GLASS EFFECT: Every container (card, sidebar, modal) must use the glassmorphism utility classes defined in visual_enhancers.",
+    "4. ANIMATIONS: Use `framer-motion` for entrance animations (staggered fade-in) and hover effects (scale, glow).",
+    "5. CUSTOM COMPONENTS: Do not use raw Shadcn components. Wrap them or style them with the glass classes. E.g., a Shadcn Button must have `backdrop-blur` and a translucent border.",
+    "6. SPECIFIC BUTTONS: Ensure there are two distinct Telegram buttons: 'Main Channel' and 'Charity Channel'.",
+    "7. LAYOUT: Use a 'Bento Grid' layout for the main dashboard area. Status toggle at the top or prominent.",
+    "8. LOGS: The logs section should look like a hacker terminal - scrolling text, different colors for [SUCCESS], [FAIL], [INFO].",
+    "9. BACKGROUND: Use a deep, dark gradient background, optionally overlaying the 'background_texture' with low opacity (mix-blend-overlay)."
+  ],
+  "universal_guidelines": [
+    "Dark colors look good when used independently without gradients. DO NOT use dark colors as gradients",
+    "Create depth through layered design elements with z-index hierarchy",
+    "Use glass-morphism effects with backdrop filters (12-24px blur)",
+    "Every interaction needs micro-animations - hover states, transitions.",
+    "Use `sonner` for toasts."
+  ]
+}
